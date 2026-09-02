@@ -1,0 +1,467 @@
+<title>Insolvencia CO: Mapa Competitivo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --paper: #FFFFFF;
+    --panel: #F5F3EF;
+    --panel-2: #EBE8E2;
+    --ink: #161512;
+    --ink-soft: rgba(22,21,18,0.66);
+    --ink-faint: rgba(22,21,18,0.42);
+    --line: rgba(22,21,18,0.13);
+    --white: #FFFFFF;
+    /* rust = acción / decisión. nunca informativo. */
+    --rust: #C2622E;
+    --rust-dark: #A8531F;
+    --rust-soft: #FBE9DE;
+    /* esmeralda = dato / patrón / información. nunca CTA. */
+    --emerald: #1FA47C;
+    --emerald-dark: #17805F;
+    --emerald-soft: #E1F5ED;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #161512;
+      --panel: #1E1B17;
+      --panel-2: #2A2620;
+      --ink: #F7F6F3;
+      --ink-soft: rgba(247,246,243,0.68);
+      --ink-faint: rgba(247,246,243,0.40);
+      --line: rgba(247,246,243,0.10);
+      --white: #1E1B17;
+      --rust: #D97441;
+      --rust-dark: #C2622E;
+      --rust-soft: rgba(194,98,46,0.18);
+      --emerald: #25BC8C;
+      --emerald-dark: #1A8563;
+      --emerald-soft: rgba(37,188,140,0.16);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #161512;
+    --panel: #1E1B17;
+    --panel-2: #2A2620;
+    --ink: #F7F6F3;
+    --ink-soft: rgba(247,246,243,0.68);
+    --ink-faint: rgba(247,246,243,0.40);
+    --line: rgba(247,246,243,0.10);
+    --white: #1E1B17;
+    --rust: #D97441;
+    --rust-dark: #C2622E;
+    --rust-soft: rgba(194,98,46,0.18);
+    --emerald: #25BC8C;
+    --emerald-dark: #1A8563;
+    --emerald-soft: rgba(37,188,140,0.16);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1380px; margin: 0 auto; padding: 56px 32px 100px; }
+
+  .label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .eyebrow { color: var(--rust); }
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.12;
+    margin: 12px 0 14px;
+    text-wrap: balance;
+    max-width: 24ch;
+  }
+  .lede {
+    font-size: 16.5px;
+    font-weight: 300;
+    color: var(--ink-soft);
+    max-width: 66ch;
+    margin: 0 0 8px;
+  }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .chip {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    background: var(--panel);
+  }
+
+  .howto {
+    margin-top: 36px;
+    padding: 18px 22px;
+    background: var(--panel);
+    border-left: 3px solid var(--rust);
+    border-radius: 4px;
+    font-size: 14.5px;
+    font-weight: 300;
+    color: var(--ink-soft);
+    max-width: 80ch;
+  }
+  .howto strong { color: var(--ink); font-weight: 600; }
+
+  section.block { margin-top: 68px; }
+  section.block > .label { display: block; margin-bottom: 8px; }
+  section.block h2 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: clamp(22px, 3vw, 30px);
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+  section.block > .lede { margin-bottom: 30px; }
+
+  /* ---- Matrix table ---- */
+  .matrix-shell {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .matrix-scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 1300px; font-size: 13.6px; }
+  thead th {
+    position: sticky; top: 0; z-index: 3;
+    background: var(--ink); color: var(--paper);
+    text-align: left; padding: 14px 16px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    border-right: 1px solid rgba(127,127,127,0.2);
+  }
+  thead th:first-child { left: 0; z-index: 4; min-width: 190px; }
+  thead th.pattern-h { background: var(--emerald-dark); color: #EFFBF6; }
+  thead th.insight-h { background: var(--rust-dark); color: #FFF3EC; }
+
+  tbody th {
+    text-align: left; vertical-align: top; padding: 16px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600; font-size: 12px; color: var(--ink);
+    background: var(--panel);
+    position: sticky; left: 0; z-index: 2;
+    border-right: 1px solid var(--line); min-width: 190px;
+  }
+  .dim-idx { display: block; color: var(--rust); font-size: 11px; margin-bottom: 4px; font-weight: 600; }
+  td {
+    vertical-align: top; padding: 16px;
+    border-top: 1px solid var(--line); border-right: 1px solid var(--line);
+    min-width: 230px; color: var(--ink); font-weight: 300;
+  }
+  tbody tr:nth-child(even) td, tbody tr:nth-child(even) th { background-color: var(--panel-2); }
+
+  td.pattern { background: var(--emerald-soft) !important; min-width: 250px; }
+  td.insight { background: var(--rust-soft) !important; min-width: 260px; border-right: none; }
+
+  .lead { font-weight: 600; display: block; margin-bottom: 4px; }
+  .sub { color: var(--ink-soft); font-size: 12.8px; }
+
+  /* ---- Forces vs Frictions ---- */
+  .ff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+  }
+  .ff-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .ff-card-head {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+  }
+  .ff-card-head .label { color: var(--ink-faint); }
+  .ff-card-head h3 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    margin: 4px 0 0;
+  }
+  .ff-section { padding: 18px 20px; }
+  .ff-section + .ff-section { border-top: 1px solid var(--line); }
+  .ff-section .label { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .dot-force { background: var(--emerald); }
+  .dot-friction { background: var(--rust); }
+  .ff-section.forces .label { color: var(--emerald-dark); }
+  .ff-section.frictions .label { color: var(--rust-dark); }
+  .ff-list { margin: 0; padding: 0; list-style: none; }
+  .ff-list li { padding: 10px 0; border-top: 1px solid var(--line); font-size: 13.8px; }
+  .ff-list li:first-child { border-top: none; padding-top: 0; }
+  .ff-list b { font-weight: 600; color: var(--ink); display: block; margin-bottom: 3px; }
+  .ff-list .cost {
+    display: block; margin-top: 5px; font-size: 12.6px; color: var(--rust-dark); font-weight: 400;
+  }
+  .ff-list .cost::before { content: "Costo probable — "; font-weight: 600; }
+
+  .shared-bar {
+    margin-top: 24px;
+    padding: 20px 24px;
+    background: var(--panel);
+    border-radius: 10px;
+    border: 1px solid var(--line);
+  }
+  .shared-bar h4 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+  .shared-bar ul { margin: 0; padding-left: 20px; }
+  .shared-bar li { font-size: 13.8px; color: var(--ink-soft); margin-bottom: 8px; }
+  .shared-bar li b { color: var(--ink); font-weight: 600; }
+
+  /* ---- Synthesis quadrant ---- */
+  .quad {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+  }
+  .qcard {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 22px 22px 20px;
+  }
+  .qcard .q-tag {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 100px; display: inline-block; margin-bottom: 12px;
+  }
+  .qcard h3 {
+    font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 18px;
+    margin: 0 0 10px; text-wrap: balance;
+  }
+  .qcard ul { margin: 0; padding-left: 18px; }
+  .qcard li { margin-bottom: 8px; font-size: 14px; color: var(--ink-soft); }
+  .qcard li b { color: var(--ink); font-weight: 600; }
+
+  .tag-works { background: var(--emerald-soft); color: var(--emerald-dark); }
+  .tag-broken { background: var(--rust-soft); color: var(--rust-dark); }
+  .tag-open { background: var(--panel-2); color: var(--ink); border: 1px solid var(--line); }
+  .tag-move { background: var(--ink); color: var(--paper); }
+
+  footer {
+    margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--ink-faint);
+  }
+
+  @media (max-width: 640px) { .wrap { padding: 36px 18px 64px; } }
+</style>
+
+<div class="wrap">
+  <span class="label eyebrow">Competitive Insight Matrix — Grupo Reemprender</span>
+  <h1>El mapa de insolvencia en Colombia, celda por celda</h1>
+  <p class="lede">Tres competidores directos (persona natural, ley de insolvencia) leídos en trece dimensiones, con el patrón de mercado y la decisión que se deriva para Reemprender en cada fila.</p>
+  <div class="meta-row">
+    <span class="chip">A · Vive Sin Deudas (Cali)</span>
+    <span class="chip">B · Insolvencia Colombia (Bogotá/Medellín)</span>
+    <span class="chip">C · ChaoDeudas (Bogotá/Barranquilla)</span>
+    <span class="chip">Sep 2026</span>
+  </div>
+
+  <div class="howto">
+    <strong>Cómo leer esta matriz:</strong> las columnas A/B/C son lo verificado en cada auditoría. La columna <strong>Patrón</strong> es lo que se repite en las tres marcas. La columna <strong>Insight para Reemprender</strong> es la decisión que se sigue de ese patrón.
+  </div>
+
+  <div class="matrix-shell" style="margin-top:44px;">
+    <div class="matrix-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Dimensión</th>
+            <th>A · Vive Sin Deudas</th>
+            <th>B · Insolvencia Colombia</th>
+            <th>C · ChaoDeudas</th>
+            <th class="pattern-h">Patrón del mercado</th>
+            <th class="insight-h">Insight para Reemprender</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <th><span class="dim-idx">01</span>Presencia online</th>
+            <td><span class="lead">Solo landing, una pantalla.</span><span class="sub">Sin blog, sin FAQ, sin redes activas (confirmado por el negocio mismo).</span></td>
+            <td><span class="lead">Sitio maduro y completo.</span><span class="sub">Blog, FAQ, casos, calculadoras + redes en 3 sub-marcas, pero el blog publica 1-2 veces al año.</span></td>
+            <td><span class="lead">Sitio completo + prensa.</span><span class="sub">Blog, testimonios, mención en El País; IG/FB activos pero no verificables (bloqueados por robots.txt).</span></td>
+            <td class="pattern">Ninguno tiene una presencia social <em>verificable</em> y consistente. El sitio web es el canal maduro; redes es la zona ciega de los tres.</td>
+            <td class="insight">Construir presencia social auditable y sostenida es terreno casi vacío de comprobar en la categoría — quien lo haga primero, gana visibilidad sin pelear de frente por SEO/Ads.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">02</span>PUV / posicionamiento</th>
+            <td><span class="lead">"Recupera tu tranquilidad."</span><span class="sub">Alivio emocional genérico de categoría, sin mecanismo propio.</span></td>
+            <td><span class="lead">"Expertos en deudas difíciles, +10.000 clientes."</span><span class="sub">Autoridad por volumen, diluida entre 8 líneas de servicio.</span></td>
+            <td><span class="lead">"La ley de tu lado."</span><span class="sub">Nombre-beneficio directo + acompañamiento humano validado por prensa, no explotado en su propio copy.</span></td>
+            <td class="pattern">Los tres usan alivio emocional o volumen — ninguno cruza autoridad legal + cercanía humana + mecanismo específico en un solo mensaje.</td>
+            <td class="insight">Ese cruce está libre: autoridad del equipo de abogados + la historia real de Alberto (superó su propia insolvencia empresarial) es un ángulo que ningún competidor puede replicar.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">03</span>Buyer persona</th>
+            <td><span class="lead">Persona en crisis activa.</span><span class="sub">Embargo inminente o acoso de cobradores ya en curso.</span></td>
+            <td><span class="lead">Tres personas a la vez.</span><span class="sub">Persona natural, empresa y público educativo preventivo — segmentación dispersa.</span></td>
+            <td><span class="lead">Persona + acompañamiento.</span><span class="sub">Deuda de consumo, pequeño comerciante, y un perfil que valora soporte emocional (evidenciado por testimonios nombrados).</span></td>
+            <td class="pattern">Persona natural en mora es el núcleo de los tres. Solo C documenta bien el sub-segmento de "necesita acompañamiento", no solo trámite.</td>
+            <td class="insight">Reemprender ya tiene el dato que ninguno comunica públicamente: 90% persona natural, umbral real de $20M COP. Usarlo como filtro de entrada califica mejor que vender a la categoría completa.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">04</span>Promesa principal</th>
+            <td><span class="lead">Detener acoso, proteger bienes.</span><span class="sub">Funcional, sin aclarar qué garantiza la ley y qué depende del caso.</span></td>
+            <td><span class="lead">Segunda oportunidad + cifras.</span><span class="sub">Resultados agregados en pesos como respaldo de la promesa.</span></td>
+            <td><span class="lead">Acompañamiento permanente.</span><span class="sub">No "sentirse atacado" por acreedores durante el proceso.</span></td>
+            <td class="pattern">Ninguno separa públicamente lo que la ley garantiza per se de lo que depende de cada caso — la promesa queda un poco ambigua en los tres.</td>
+            <td class="insight">Reemprender ya tiene resuelto ese disclaimer (los 3 requisitos de ley). Comunicarlo con esa precisión es una señal de confianza que hoy nadie más está mostrando.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">05</span>Ángulos de venta</th>
+            <td><span class="lead">Ninguno más allá del alivio.</span></td>
+            <td><span class="lead">Volumen fuerte, reframe moral tibio.</span><span class="sub">"Los bancos se salvan con dinero de todos, usted también" — subexplotado frente a las cifras.</span></td>
+            <td><span class="lead">Trayectoria sin usar.</span><span class="sub">+600 casos y 7 años, validados por El País, ausentes en su propio sitio.</span></td>
+            <td class="pattern">Las cifras de autoridad existen en los tres, pero ninguno las coloca donde más convierte: cerca del CTA.</td>
+            <td class="insight">Poner cifras propias de Reemprender (años de fundación, casos resueltos) junto al CTA es una mejora barata con precedente claro de estar subexplotada en todo el mercado.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">06</span>Oferta</th>
+            <td><span class="lead">Un solo punto de entrada.</span><span class="sub">Sin precio visible, sin escalera.</span></td>
+            <td><span class="lead">La más sofisticada.</span><span class="sub">Consulta de entrada $29-65K COP + líneas B2B (IFI) como ingreso paralelo.</span></td>
+            <td><span class="lead">Dos servicios, sin precio.</span><span class="sub">Sin escalera de valor visible.</span></td>
+            <td class="pattern">Solo un competidor filtra con precio de entrada; los otros dos dependen 100% de calificación manual después del clic.</td>
+            <td class="insight">Un diagnóstico gratuito pero calificado (formulario previo con el umbral de $20M) resuelve el problema ya diagnosticado en Reemprender — 25% de leads con deuda insuficiente — mejor que cualquier competidor hoy.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">07</span>Mecanismo / método</th>
+            <td><span class="lead">"Obligación natural", sin explicar.</span></td>
+            <td><span class="lead">8 servicios, sin mecanismo único.</span></td>
+            <td><span class="lead">Negociación en 60 días hábiles.</span><span class="sub">Dato de proceso real, citado solo en prensa externa.</span></td>
+            <td class="pattern">Los conceptos técnicos fuertes existen (obligación natural, plazos reales) pero ninguno los convierte en pieza de autoridad explicada en lenguaje simple.</td>
+            <td class="insight">Ser el primero en explicar "obligación natural" y los plazos reales del proceso, en lenguaje simple, es contenido de autoridad que hoy nadie ha ocupado.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">08</span>Nivel de conciencia dominante</th>
+            <td><span class="lead">Muy consciente.</span><span class="sub">Solo CTA directo de agendar.</span></td>
+            <td><span class="lead">Consciente del producto.</span><span class="sub">Con algo de conciencia del problema vía blog disperso.</span></td>
+            <td><span class="lead">Consciente del producto.</span><span class="sub">Testimonios, equipo, certificación ISO.</span></td>
+            <td class="pattern">Ninguno cubre bien Inconsciente ni Consciente del problema — los tres le venden a quien ya sabe que la ley de insolvencia existe.</td>
+            <td class="insight">El contenido educativo top-of-funnel (qué pasa si no actúas, quién califica) es terreno vacío en los tres. Ahí vive volumen de demanda que hoy nadie está educando.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">09</span>Prueba / credibilidad</th>
+            <td><span class="lead">Ninguna.</span><span class="sub">Sin testimonios, sin cifras.</span></td>
+            <td><span class="lead">Cifras fuertes, testimonios débiles.</span><span class="sub">Solo dos testimonios, de 2017, sin cuantificar.</span></td>
+            <td><span class="lead">Testimonios nombrados y recientes.</span><span class="sub">Sin cifra por caso; la cifra fuerte vive solo en prensa externa (El País).</span></td>
+            <td class="pattern">Ningún competidor combina bien cifra agregada + caso individual cuantificado — siempre falta una de las dos piezas.</td>
+            <td class="insight">Un testimonio con nombre + cifra concreta (monto de deuda, tiempo de resolución) sería la pieza de prueba social más fuerte de las cuatro marcas juntas — y nadie la tiene todavía.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">10</span>Mensajes utilizados</th>
+            <td><span class="lead">"No dormir por las deudas."</span></td>
+            <td><span class="lead">"Los bancos se rescatan, usted también merece."</span></td>
+            <td><span class="lead">"La ley de tu lado" / "acompañamiento permanente."</span></td>
+            <td class="pattern">Cada uno tiene una frase fuerte, pero ninguno la sostiene como eje único — compite con otros mensajes en la misma página.</td>
+            <td class="insight">Elegir un solo mensaje eje y repetirlo sin diluirlo en todos los canales es ventaja de ejecución, no de estrategia — más fácil de lograr que superar a la competencia en contenido.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">11</span>CTA / conversión</th>
+            <td><span class="lead">"Agenda tu cita gratuita."</span><span class="sub">Sin fricción ni filtro previo.</span></td>
+            <td><span class="lead">"Agenda tu cita" + precio visible.</span><span class="sub">Filtra mejor gracias al precio de entrada.</span></td>
+            <td><span class="lead">"Contáctanos" / "Descubre posibilidades."</span><span class="sub">Vago, sin urgencia ni filtro.</span></td>
+            <td class="pattern">Solo uno de los tres filtra con precio; los otros dependen de calificación manual después del clic — igual que Reemprender hoy.</td>
+            <td class="insight">Coincide con el problema ya diagnosticado (filtro artesanal de $20M fallando, 25% de no-agendamiento). Ningún competidor lo resuelve mejor — resolverlo bien es ventaja real, no solo mejora interna.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">12</span>Quick wins observados</th>
+            <td><span class="lead">Cifras, ley vigente, modelo de cobro.</span></td>
+            <td><span class="lead">Testimonios frescos, más blog, un solo portafolio de marca.</span></td>
+            <td><span class="lead">Subir datos de prensa a home, blindar marca vs. Chile.</span></td>
+            <td class="pattern">Los tres tienen autoridad que ya poseen pero no muestran en el lugar correcto — el error es de exhibición, no de sustancia.</td>
+            <td class="insight">Antes de producir contenido nuevo, auditar qué autoridad ya tiene Reemprender (años, casos, equipo de abogados) y subirla al frente. Es el error más barato de corregir y el más repetido en el mercado.</td>
+          </tr>
+
+          <tr>
+            <th><span class="dim-idx">13</span>Errores estructurales</th>
+            <td><span class="lead">Sin escalera, sin captación orgánica.</span></td>
+            <td><span class="lead">Portafolio de marcas sin jerarquía clara.</span></td>
+            <td><span class="lead">Sin precio de entrada; riesgo de confundirse con la marca chilena homónima.</span></td>
+            <td class="pattern">Cada competidor tiene un techo estructural distinto — ninguno tiene resuelto el ciclo completo de oferta, marca y captación.</td>
+            <td class="insight">Reemprender ya identificó su propio techo (migración Fundación → Grupo, falta de CRM). Resolverlo bien, cuando ni la competencia lo tiene resuelto, es una ventana de tiempo real, no solo una tarea pendiente.</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <section class="block">
+    <span class="label eyebrow">Síntesis estratégica</span>
+    <h2>Lo que la matriz responde, no solo describe</h2>
+    <p class="lede">Cuatro preguntas, cuatro respuestas — construidas fila por fila, no una opinión aparte. El desglose de ventajas y fricciones por competidor vive en su propio análisis (Forces vs. Frictions).</p>
+
+    <div class="quad">
+      <div class="qcard">
+        <span class="q-tag tag-works">Qué funciona</span>
+        <h3>Lo que ya demuestra tracción en el mercado</h3>
+        <ul>
+          <li><b>Reframe moral de la vergüenza</b> ("usted también merece una segunda oportunidad") — es el mensaje más citado en prensa de todo el sector.</li>
+          <li><b>Precio de entrada bajo</b> como filtro de leads (Insolvencia Colombia) — reduce la dependencia de calificación manual.</li>
+          <li><b>Testimonios con nombre y apellido</b> (ChaoDeudas) generan más confianza que cifras agregadas solas.</li>
+        </ul>
+      </div>
+      <div class="qcard">
+        <span class="q-tag tag-broken">Qué está mal resuelto</span>
+        <h3>Frictions que las tres marcas arrastran</h3>
+        <ul>
+          <li>Opacidad de precio en categoría sensible a estafas — friction de confianza compartida por los tres.</li>
+          <li>Autoridad agregada y prueba individual nunca conectadas en la misma pieza.</li>
+          <li>Redes sociales sin evidencia verificable de actividad sostenida en ninguna de las tres.</li>
+        </ul>
+      </div>
+      <div class="qcard">
+        <span class="q-tag tag-open">Qué nadie explota</span>
+        <h3>Espacios completamente vacíos hoy</h3>
+        <ul>
+          <li>Contenido para los niveles Inconsciente y Consciente del problema — todo el mercado le vende solo a quien ya busca "ley de insolvencia".</li>
+          <li>Explicar "obligación natural" y los plazos reales del proceso en lenguaje simple, como pieza de autoridad.</li>
+          <li>Un ángulo de fundador con historia personal de insolvencia superada — ningún competidor tiene ese activo narrativo.</li>
+        </ul>
+      </div>
+      <div class="qcard">
+        <span class="q-tag tag-move">Cómo debería responder Reemprender</span>
+        <h3>Movimientos concretos, en orden de esfuerzo</h3>
+        <ul>
+          <li>Filtrar leads por el umbral de $20M <i>antes</i> de la cita, no después — es el único punto donde el mercado entero resuelve peor que el problema ya diagnosticado internamente.</li>
+          <li>Cerrar las cuatro frictions compartidas primero (precio, prueba conectada, disclaimer legal, top-of-funnel) — vale más que copiar cualquier force individual de un competidor.</li>
+          <li>Subir al frente la autoridad que ya existe (equipo de abogados, historia de Alberto, disclaimer legal preciso) antes de invertir en contenido nuevo.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Fuentes: auditorías de vivesindeudas.com, insolvenciacolombia.com y chaodeudas.co realizadas en esta sesión (sitio web, prensa y redes donde fue verificable) · Grupo Reemprender, contexto interno del proyecto.
+  </footer>
+</div>
