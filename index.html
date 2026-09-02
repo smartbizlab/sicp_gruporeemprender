@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis Competitivo — Insolvencia CO</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --paper: #FFFFFF;
+    --panel: #F5F3EF;
+    --panel-2: #EBE8E2;
+    --ink: #161512;
+    --ink-soft: rgba(22,21,18,0.66);
+    --ink-faint: rgba(22,21,18,0.42);
+    --line: rgba(22,21,18,0.13);
+    --white: #FFFFFF;
+    --rust: #C2622E;
+    --rust-dark: #A8531F;
+    --rust-soft: #FBE9DE;
+    --emerald: #1FA47C;
+    --emerald-dark: #17805F;
+    --emerald-soft: #E1F5ED;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 300; line-height: 1.6;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 64px 32px 100px; }
+
+  .label { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; }
+  .eyebrow { color: var(--rust); }
+  h1 {
+    font-family: 'Archivo', sans-serif; font-weight: 700;
+    font-size: clamp(28px, 4vw, 40px); line-height: 1.14;
+    margin: 12px 0 14px; max-width: 20ch;
+  }
+  .lede { font-size: 16px; font-weight: 300; color: var(--ink-soft); max-width: 62ch; margin: 0 0 8px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; margin-bottom: 48px; }
+  .chip {
+    font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 100px;
+    border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel);
+  }
+
+  .toc { display: flex; flex-direction: column; gap: 14px; }
+  .toc-item {
+    display: grid;
+    grid-template-columns: 44px 1fr 20px;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 24px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--white);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .toc-item:hover { border-color: var(--rust); background: var(--panel); }
+
+  .toc-num {
+    font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 16px;
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--emerald-soft); color: var(--emerald-dark);
+  }
+  .toc-item:nth-child(2) .toc-num { background: var(--rust-soft); color: var(--rust-dark); }
+  .toc-item:nth-child(3) .toc-num { background: var(--panel-2); color: var(--ink-soft); }
+
+  .toc-title { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 18.5px; margin: 0 0 4px; }
+  .toc-desc { font-size: 13.8px; color: var(--ink-soft); margin: 0; }
+  .toc-file { font-size: 11.5px; color: var(--ink-faint); margin-top: 6px; }
+
+  .arrow { color: var(--ink-faint); font-size: 18px; }
+  .toc-item:hover .arrow { color: var(--rust); }
+
+  footer {
+    margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--ink-faint);
+  }
+
+  @media (max-width: 560px) {
+    .wrap { padding: 40px 20px 64px; }
+    .toc-item { grid-template-columns: 36px 1fr; }
+    .arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="label eyebrow">Grupo Reemprender — Análisis competitivo</span>
+    <h1>Insolvencia en Colombia: el mapa completo</h1>
+    <p class="lede">Tres lecturas de la misma investigación (Vive Sin Deudas, Insolvencia Colombia, ChaoDeudas), cada una con su propio ángulo de análisis.</p>
+    <div class="meta-row">
+      <span class="chip">3 documentos</span>
+      <span class="chip">Sep 2026</span>
+    </div>
+
+    <div class="toc">
+      <a class="toc-item" href="./competitive-insight-matrix.html">
+        <span class="toc-num">01</span>
+        <span>
+          <p class="toc-title">Matriz de Comparación Competitiva</p>
+          <p class="toc-desc">Trece dimensiones lado a lado (PUV, oferta, CTA, prueba social...) con el patrón de mercado y la decisión para Reemprender en cada fila.</p>
+          <p class="toc-file">competitive-insight-matrix.html</p>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="toc-item" href="./forces-vs-frictions.html">
+        <span class="toc-num">02</span>
+        <span>
+          <p class="toc-title">Fuerzas y Fricciones</p>
+          <p class="toc-desc">Qué le da ventaja real a cada competidor frente a qué probablemente le está costando conversiones, con el costo estimado de cada fricción.</p>
+          <p class="toc-file">forces-vs-frictions.html</p>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="toc-item" href="./pattern-gap-opportunity.html">
+        <span class="toc-num">03</span>
+        <span>
+          <p class="toc-title">Patrón, Vacío y Oportunidad</p>
+          <p class="toc-desc">Siete lecturas del mercado llevadas de la observación a la decisión: qué está saturado, qué queda mal resuelto y cómo lo ocupa Reemprender.</p>
+          <p class="toc-file">pattern-gap-opportunity.html</p>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+
+    <footer>
+      Fuentes: auditorías de vivesindeudas.com, insolvenciacolombia.com y chaodeudas.co · Grupo Reemprender, contexto interno del proyecto.
+    </footer>
+  </div>
+</body>
+</html>

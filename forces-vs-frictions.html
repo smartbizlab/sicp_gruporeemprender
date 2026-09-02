@@ -1,0 +1,236 @@
+<title>Forces vs. Frictions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --paper: #FFFFFF;
+    --panel: #F5F3EF;
+    --panel-2: #EBE8E2;
+    --ink: #161512;
+    --ink-soft: rgba(22,21,18,0.66);
+    --ink-faint: rgba(22,21,18,0.42);
+    --line: rgba(22,21,18,0.13);
+    --white: #FFFFFF;
+    --rust: #C2622E;
+    --rust-dark: #A8531F;
+    --rust-soft: #FBE9DE;
+    --emerald: #1FA47C;
+    --emerald-dark: #17805F;
+    --emerald-soft: #E1F5ED;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #161512; --panel: #1E1B17; --panel-2: #2A2620;
+      --ink: #F7F6F3; --ink-soft: rgba(247,246,243,0.68); --ink-faint: rgba(247,246,243,0.40);
+      --line: rgba(247,246,243,0.10); --white: #1E1B17;
+      --rust: #D97441; --rust-dark: #C2622E; --rust-soft: rgba(194,98,46,0.18);
+      --emerald: #25BC8C; --emerald-dark: #1A8563; --emerald-soft: rgba(37,188,140,0.16);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #161512; --panel: #1E1B17; --panel-2: #2A2620;
+    --ink: #F7F6F3; --ink-soft: rgba(247,246,243,0.68); --ink-faint: rgba(247,246,243,0.40);
+    --line: rgba(247,246,243,0.10); --white: #1E1B17;
+    --rust: #D97441; --rust-dark: #C2622E; --rust-soft: rgba(194,98,46,0.18);
+    --emerald: #25BC8C; --emerald-dark: #1A8563; --emerald-soft: rgba(37,188,140,0.16);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 300; line-height: 1.6;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 56px 32px 100px; }
+
+  .label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .eyebrow { color: var(--rust); }
+  h1 {
+    font-family: 'Archivo', sans-serif; font-weight: 700;
+    font-size: clamp(28px, 4vw, 42px); line-height: 1.12;
+    margin: 12px 0 14px; text-wrap: balance; max-width: 22ch;
+  }
+  .lede { font-size: 16.5px; font-weight: 300; color: var(--ink-soft); max-width: 70ch; margin: 0 0 8px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .chip {
+    font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 100px;
+    border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel);
+  }
+
+  .key {
+    margin-top: 32px; display: flex; gap: 24px; flex-wrap: wrap;
+    padding: 16px 20px; background: var(--panel); border-radius: 10px; border: 1px solid var(--line);
+  }
+  .key-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: var(--ink-soft); max-width: 46ch; }
+  .key-item b { color: var(--ink); font-weight: 600; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-top: 5px; flex-shrink: 0; }
+  .dot-force { background: var(--emerald); }
+  .dot-friction { background: var(--rust); }
+
+  .ff-grid {
+    margin-top: 40px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px;
+  }
+  .ff-card { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--white); }
+  .ff-card-head { padding: 20px 22px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  .ff-card-head .label { color: var(--ink-faint); }
+  .ff-card-head h2 { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 21px; margin: 4px 0 0; }
+  .ff-card-head .url { font-size: 12.5px; color: var(--ink-faint); margin-top: 3px; }
+  .ff-section { padding: 20px 22px; }
+  .ff-section + .ff-section { border-top: 1px solid var(--line); }
+  .ff-section .label { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .ff-section.forces .label { color: var(--emerald-dark); }
+  .ff-section.frictions .label { color: var(--rust-dark); }
+  .ff-list { margin: 0; padding: 0; list-style: none; }
+  .ff-list li { padding: 12px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .ff-list li:first-child { border-top: none; padding-top: 0; }
+  .ff-list b { font-weight: 600; color: var(--ink); display: block; margin-bottom: 4px; }
+  .ff-list .cost { display: block; margin-top: 6px; font-size: 12.8px; color: var(--rust-dark); font-weight: 400; }
+  .ff-list .cost::before { content: "Costo probable — "; font-weight: 600; }
+
+  .shared {
+    margin-top: 44px;
+  }
+  .shared h2 { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 22px; margin: 0 0 6px; }
+  .shared > .lede { margin-bottom: 20px; }
+  .shared-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .shared-item {
+    padding: 18px 20px; background: var(--rust-soft); border-radius: 10px; border: 1px solid var(--line);
+  }
+  .shared-item b { display: block; font-weight: 600; color: var(--ink); margin-bottom: 6px; font-size: 14.5px; }
+  .shared-item span { font-size: 13.5px; color: var(--ink-soft); }
+
+  .verdict {
+    margin-top: 44px; padding: 24px 26px; background: var(--ink); color: var(--paper);
+    border-radius: 12px;
+  }
+  .verdict .label { color: var(--emerald); }
+  .verdict p { font-size: 15px; font-weight: 300; margin: 10px 0 0; max-width: 78ch; color: rgba(255,255,255,0.88); }
+  :root[data-theme="dark"] .verdict, @media (prefers-color-scheme: dark) { }
+  .verdict-dark-fix { }
+
+  footer {
+    margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--ink-faint);
+  }
+  @media (max-width: 640px) { .wrap { padding: 36px 18px 64px; } }
+</style>
+
+<div class="wrap">
+  <span class="label eyebrow">Grupo Reemprender — Análisis competitivo</span>
+  <h1>Forces vs. Frictions</h1>
+  <p class="lede">No "qué hacen bien" y "qué hacen mal" — impacto competitivo real. Forces es lo que reduce riesgo percibido, genera autoridad o facilita conversión. Frictions es lo que probablemente le cuesta leads a cada marca, aunque nunca lo midan. Cada friction lleva su costo probable, no solo la ausencia.</p>
+  <div class="meta-row">
+    <span class="chip">A · Vive Sin Deudas (Cali)</span>
+    <span class="chip">B · Insolvencia Colombia (Bogotá/Medellín)</span>
+    <span class="chip">C · ChaoDeudas (Bogotá/Barranquilla)</span>
+    <span class="chip">Sep 2026</span>
+  </div>
+
+  <div class="key">
+    <div class="key-item"><span class="dot dot-force"></span><span><b>Force</b> — ventaja real: qué hacen mejor que la mayoría, qué es difícil de copiar rápido, qué reduce riesgo percibido o facilita conversión.</span></div>
+    <div class="key-item"><span class="dot dot-friction"></span><span><b>Friction</b> — pérdida de oportunidad: mensaje confuso, prueba débil, oferta ambigua o mecanismo poco claro, con el costo de conversión que probablemente genera.</span></div>
+  </div>
+
+  <div class="ff-grid">
+
+    <div class="ff-card">
+      <div class="ff-card-head">
+        <span class="label">Competidor A</span>
+        <h2>Vive Sin Deudas</h2>
+        <div class="url">vivesindeudas.com</div>
+      </div>
+      <div class="ff-section forces">
+        <span class="label"><span class="dot dot-force"></span>Forces</span>
+        <ul class="ff-list">
+          <li><b>Mensaje de alivio en una frase, sin fricción de lectura.</b>"Recupera tu tranquilidad" se entiende en tres segundos — facilita la primera impresión, aunque no sostiene la conversión por sí solo.</li>
+          <li><b>Un solo CTA, repetido cuatro veces.</b>Cero ambigüedad sobre el siguiente paso.</li>
+          <li><b>"Obligación natural" ya nombrado.</b>Semilla de mecanismo propio — difícil de copiar rápido si lo desarrollan a fondo antes que otros.</li>
+        </ul>
+      </div>
+      <div class="ff-section frictions">
+        <span class="label"><span class="dot dot-friction"></span>Frictions</span>
+        <ul class="ff-list">
+          <li><b>Cero prueba social — sin testimonios, sin cifras.</b><span class="cost">en un nicho de alto riesgo percibido (dinero, miedo a estafa), la ausencia total de prueba probablemente eleva el rebote antes de agendar, no solo "se ve incompleto".</span></li>
+          <li><b>Sin precio ni modelo de cobro visible.</b><span class="cost">la opacidad de precio en una categoría sensible a estafas genera desconfianza activa — probablemente filtra afuera al lead más calificado, el que sí compara antes de dar su teléfono.</span></li>
+          <li><b>"Garantizado" sin distinguir qué garantiza la ley y qué depende del caso.</b><span class="cost">expectativa desalineada que aparece tarde, como objeción en la llamada de ventas — no se ve en el sitio, pero probablemente sí en la tasa de cierre.</span></li>
+          <li><b>PUV genérica, intercambiable con cualquier despacho de la categoría.</b><span class="cost">sin ángulo propio, compiten solo por presupuesto de pauta — cada clic cuesta lo mismo o más que el de un competidor con mensaje diferenciado.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ff-card">
+      <div class="ff-card-head">
+        <span class="label">Competidor B</span>
+        <h2>Insolvencia Colombia</h2>
+        <div class="url">insolvenciacolombia.com</div>
+      </div>
+      <div class="ff-section forces">
+        <span class="label"><span class="dot dot-force"></span>Forces</span>
+        <ul class="ff-list">
+          <li><b>Cifras de autoridad grandes y verificables.</b>+10.000 clientes, $220.000M negociados — reduce riesgo percibido por volumen; toma años construir, no se copia en un trimestre.</li>
+          <li><b>Escalera de oferta con precio de entrada bajo ($29-65K).</b>Facilita conversión al bajar la barrera de la primera cita y filtra mejor que "cita gratis" sin condición.</li>
+          <li><b>Cobertura de prensa nacional (Caracol, RCN, El Tiempo).</b>Autoridad de tercero — difícil de replicar sin tiempo y relaciones de medios.</li>
+          <li><b>Herramientas propias (calculadoras, simulador de crédito).</b>Perciben más sofisticación tecnológica y generan permanencia en el sitio.</li>
+        </ul>
+      </div>
+      <div class="ff-section frictions">
+        <span class="label"><span class="dot dot-friction"></span>Frictions</span>
+        <ul class="ff-list">
+          <li><b>Ocho líneas de servicio bajo una sola marca.</b><span class="cost">mecanismo poco claro — el prospecto no sabe en qué categoría entra él mismo, lo que probablemente diluye el clic hacia el servicio correcto.</span></li>
+          <li><b>Testimonios de 2017, solo dos, sin cifra.</b><span class="cost">contradice su propio mensaje de "+10.000 clientes" — un comprador escéptico nota rápido que la prueba individual no respalda la cifra agregada, y esa contradicción entre discurso y evidencia es más cara que no tener testimonios.</span></li>
+          <li><b>Blog con cadencia de 1-2 posts al año.</b><span class="cost">mala alineación entre el nivel de conciencia que dicen atender (educación financiera preventiva) y la frecuencia real de contenido — probablemente no sostiene tráfico orgánico en ese nivel.</span></li>
+          <li><b>Tres marcas en un portafolio sin jerarquía explicada.</b><span class="cost">fricción de decisión antes de llegar al CTA — el prospecto nuevo no sabe cuál es la puerta de entrada correcta.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ff-card">
+      <div class="ff-card-head">
+        <span class="label">Competidor C</span>
+        <h2>ChaoDeudas</h2>
+        <div class="url">chaodeudas.co</div>
+      </div>
+      <div class="ff-section forces">
+        <span class="label"><span class="dot dot-force"></span>Forces</span>
+        <ul class="ff-list">
+          <li><b>Testimonios nombrados y variados.</b>Cinco personas con nombre y apellido, distintos tipos de caso — la prueba social más creíble de los tres, por ser identificable.</li>
+          <li><b>Mención de prensa con cifras concretas (El País).</b>+600 personas, 60 días de proceso, 5 años de reporte — autoridad de tercero difícil de fabricar rápido.</li>
+          <li><b>Nombre de marca-beneficio: "Chao Deudas".</b>Más memorable y fácil de repetir de boca en boca que "Insolvencia Colombia" o "Vive Sin Deudas".</li>
+          <li><b>Ángulo de acompañamiento en audiencias legales.</b>"No sentirse atacado por acreedores" ataca un riesgo percibido específico y distinto (miedo a la confrontación), no solo el riesgo financiero genérico.</li>
+        </ul>
+      </div>
+      <div class="ff-section frictions">
+        <span class="label"><span class="dot dot-friction"></span>Frictions</span>
+        <ul class="ff-list">
+          <li><b>Su mejor dato de autoridad vive solo en un artículo externo, no en su propio sitio.</b><span class="cost">quien no busque esa nota de prensa nunca ve el dato — probablemente dejan su argumento de conversión más fuerte fuera del embudo principal.</span></li>
+          <li><b>Sin precio ni escalera de valor visible.</b><span class="cost">mismo problema que Vive Sin Deudas: opacidad de precio en categoría sensible a estafas es fricción de confianza, no solo de información.</span></li>
+          <li><b>Testimonios sin cifra cuantificada, pese a tener el dato general (60 días) disponible.</b><span class="cost">oportunidad de prueba perdida por no conectar el dato agregado con el caso individual — la pieza más persuasiva posible queda sin construir.</span></li>
+          <li><b>Riesgo de colisión de marca con "ChaoDeudas" Chile (fintech de descuentos, empresa distinta).</b><span class="cost">un prospecto que busque la marca puede aterrizar en el sitio equivocado con una oferta distinta, generando una expectativa desalineada antes del primer contacto real.</span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="shared">
+    <h2>Fricciones que comparten los tres</h2>
+    <p class="lede">No son fallas individuales — son la norma no escrita de la categoría. Cerrar estas cuatro pesa más que copiar cualquier force aislado de un competidor.</p>
+    <div class="shared-grid">
+      <div class="shared-item"><b>Opacidad de precio</b><span>Ninguno publica cómo cobra. En una categoría con historial de estafadores de deuda, esto probablemente cuesta más confianza de la que cualquiera de los tres asume.</span></div>
+      <div class="shared-item"><b>Autoridad agregada sin prueba individual conectada</b><span>Todos tienen una cifra fuerte (volumen, prensa, años) o testimonios reales — nunca ambos en la misma pieza.</span></div>
+      <div class="shared-item"><b>Promesa legal ambigua</b><span>Nadie separa con claridad qué garantiza la ley por sí sola y qué depende del caso particular.</span></div>
+      <div class="shared-item"><b>Cero contenido top-of-funnel verificable</b><span>Los tres solo hablan con quien ya busca "ley de insolvencia" — el volumen de demanda anterior a esa búsqueda no lo está educando nadie.</span></div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <span class="label">Para Reemprender</span>
+    <p>El competidor con más forces (Insolvencia Colombia) no es el que mejor convierte necesariamente — es el que más fricciones esconde detrás de sus cifras grandes. La jugada más barata no es igualar sus forces uno por uno: es cerrar las cuatro fricciones compartidas antes que cualquiera de los tres, empezando por la que ya está diagnosticada como pérdida real de leads — el filtro de $20M ocurriendo después del clic en vez de antes.</p>
+  </div>
+
+  <footer>
+    Fuentes: auditorías de vivesindeudas.com, insolvenciacolombia.com y chaodeudas.co realizadas en esta sesión (sitio web, prensa y redes donde fue verificable) · Grupo Reemprender, contexto interno del proyecto.
+  </footer>
+</div>

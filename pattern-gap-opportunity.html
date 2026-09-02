@@ -1,0 +1,271 @@
+<title>Pattern, Gap, Opportunity</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --paper: #FFFFFF;
+    --panel: #F5F3EF;
+    --panel-2: #EBE8E2;
+    --ink: #161512;
+    --ink-soft: rgba(22,21,18,0.66);
+    --ink-faint: rgba(22,21,18,0.42);
+    --line: rgba(22,21,18,0.13);
+    --white: #FFFFFF;
+    --rust: #C2622E;
+    --rust-dark: #A8531F;
+    --rust-soft: #FBE9DE;
+    --emerald: #1FA47C;
+    --emerald-dark: #17805F;
+    --emerald-soft: #E1F5ED;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #161512; --panel: #1E1B17; --panel-2: #2A2620;
+      --ink: #F7F6F3; --ink-soft: rgba(247,246,243,0.68); --ink-faint: rgba(247,246,243,0.40);
+      --line: rgba(247,246,243,0.10); --white: #1E1B17;
+      --rust: #D97441; --rust-dark: #C2622E; --rust-soft: rgba(194,98,46,0.18);
+      --emerald: #25BC8C; --emerald-dark: #1A8563; --emerald-soft: rgba(37,188,140,0.16);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #161512; --panel: #1E1B17; --panel-2: #2A2620;
+    --ink: #F7F6F3; --ink-soft: rgba(247,246,243,0.68); --ink-faint: rgba(247,246,243,0.40);
+    --line: rgba(247,246,243,0.10); --white: #1E1B17;
+    --rust: #D97441; --rust-dark: #C2622E; --rust-soft: rgba(194,98,46,0.18);
+    --emerald: #25BC8C; --emerald-dark: #1A8563; --emerald-soft: rgba(37,188,140,0.16);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 300; line-height: 1.6;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 56px 32px 100px; }
+
+  .label { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; }
+  .eyebrow { color: var(--rust); }
+  h1 {
+    font-family: 'Archivo', sans-serif; font-weight: 700;
+    font-size: clamp(28px, 4vw, 42px); line-height: 1.12;
+    margin: 12px 0 14px; text-wrap: balance; max-width: 22ch;
+  }
+  .lede { font-size: 16.5px; font-weight: 300; color: var(--ink-soft); max-width: 70ch; margin: 0 0 8px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .chip {
+    font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 100px;
+    border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel);
+  }
+
+  .chain {
+    margin-top: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .item {
+    position: relative;
+    padding: 36px 0;
+    border-top: 1px solid var(--line);
+  }
+  .item:first-child { border-top: none; padding-top: 8px; }
+
+  .item-num {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: 148px 1fr;
+    gap: 20px;
+    padding: 16px 0;
+  }
+  .stage + .stage { border-top: 1px dashed var(--line); }
+  .stage-tag {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .stage-tag .glyph {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .stage-tag .name { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 14.5px; padding-top: 5px; }
+
+  .pattern .glyph { background: var(--panel-2); color: var(--ink-soft); }
+  .gap .glyph { background: var(--rust-soft); color: var(--rust-dark); }
+  .opportunity .glyph { background: var(--emerald-soft); color: var(--emerald-dark); }
+
+  .stage-body { font-size: 15px; color: var(--ink); }
+  .stage-body p { margin: 0; }
+  .stage-body .evidence {
+    display: block; margin-top: 8px; font-size: 13px; color: var(--ink-faint); font-style: normal;
+  }
+  .stage-body b { font-weight: 600; }
+
+  .opportunity .stage-body { padding: 14px 16px; background: var(--emerald-soft); border-radius: 8px; }
+
+  .verdict {
+    margin-top: 52px; padding: 26px 28px; background: var(--ink); color: var(--paper); border-radius: 12px;
+  }
+  .verdict .label { color: var(--emerald); }
+  .verdict p { font-size: 15px; font-weight: 300; margin: 10px 0 0; max-width: 80ch; color: rgba(255,255,255,0.88); }
+
+  footer {
+    margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--ink-faint);
+  }
+
+  @media (max-width: 620px) {
+    .wrap { padding: 36px 18px 64px; }
+    .stage { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>
+
+<div class="wrap">
+  <span class="label eyebrow">Grupo Reemprender — Análisis competitivo</span>
+  <h1>Pattern → Gap → Opportunity</h1>
+  <p class="lede">Siete lecturas de las tres auditorías (Vive Sin Deudas, Insolvencia Colombia, ChaoDeudas), llevadas hasta la decisión de marca. El patrón dice qué mensaje ya está saturado; el gap dice qué queda mal resuelto; la oportunidad convierte eso en algo que Reemprender puede ocupar.</p>
+  <div class="meta-row">
+    <span class="chip">A · Vive Sin Deudas</span>
+    <span class="chip">B · Insolvencia Colombia</span>
+    <span class="chip">C · ChaoDeudas</span>
+    <span class="chip">Sep 2026</span>
+  </div>
+
+  <div class="chain">
+
+    <div class="item">
+      <span class="item-num">01 / MENSAJE DE CATEGORÍA</span>
+      <div class="stage pattern">
+        <div class="stage-tag"><span class="glyph">P</span><span class="name">Pattern</span></div>
+        <div class="stage-body"><p>Los tres compiten con una variante del mismo mensaje: <b>alivio emocional / segunda oportunidad</b> — "recupera tu tranquilidad", "usted también merece una segunda oportunidad", "la ley de tu lado".</p><span class="evidence">Presente en las tres PUV auditadas, con distinto empaque pero la misma promesa central.</span></div>
+      </div>
+      <div class="stage gap">
+        <div class="stage-tag"><span class="glyph">G</span><span class="name">Gap</span></div>
+        <div class="stage-body"><p>El alivio emocional ya es <b>precio de entrada para competir</b>, no una ventaja. Ninguno lo respalda en la misma frase con una credencial de autoridad verificable — el alivio se dice, pero no se sostiene con quién lo respalda.</p></div>
+      </div>
+      <div class="stage opportunity">
+        <div class="stage-tag"><span class="glyph">O</span><span class="name">Opportunity</span></div>
+        <div class="stage-body"><p>Fusionar alivio + autoridad + historia real en un solo mensaje: un equipo de abogados aplicando la ley, respaldado por un fundador que superó su propia insolvencia empresarial. Ningún competidor puede ocupar ese cruce — no tienen la historia ni, en dos de los tres casos, el mismo peso de equipo legal visible.</p></div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-num">02 / PRUEBA SOCIAL</span>
+      <div class="stage pattern">
+        <div class="stage-tag"><span class="glyph">P</span><span class="name">Pattern</span></div>
+        <div class="stage-body"><p>Los tres muestran <b>algún tipo de cifra de autoridad</b> — clientes, dinero negociado, años de trayectoria, cobertura de prensa.</p><span class="evidence">Insolvencia Colombia: +10.000 clientes, $220.000M negociados. ChaoDeudas: +600 casos y 7 años, citados por El País.</span></div>
+      </div>
+      <div class="stage gap">
+        <div class="stage-tag"><span class="glyph">G</span><span class="name">Gap</span></div>
+        <div class="stage-body"><p>Ninguno conecta la cifra agregada con <b>un caso individual cuantificado</b> en la misma pieza. La prueba social vive partida en dos mitades que nunca se tocan: cifra sin nombre, o nombre sin cifra.</p></div>
+      </div>
+      <div class="stage opportunity">
+        <div class="stage-tag"><span class="glyph">O</span><span class="name">Opportunity</span></div>
+        <div class="stage-body"><p>Ser el primero en publicar un testimonio que una ambas mitades: "Juan, deuda de $X, resuelta en Y meses — uno de los casos que respaldan nuestros Z años de trayectoria". Es la pieza de prueba social más fuerte de la categoría, y hoy nadie la tiene construida.</p></div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-num">03 / FILTRO DE ENTRADA</span>
+      <div class="stage pattern">
+        <div class="stage-tag"><span class="glyph">P</span><span class="name">Pattern</span></div>
+        <div class="stage-body"><p>Los tres usan la <b>cita o consulta como único filtro</b> — gratuita en dos casos, de bajo costo en el tercero.</p></div>
+      </div>
+      <div class="stage gap">
+        <div class="stage-tag"><span class="glyph">G</span><span class="name">Gap</span></div>
+        <div class="stage-body"><p>Ninguno filtra por el criterio que de verdad importa para la rentabilidad del negocio — el monto de la deuda — antes de agendar. El filtro ocurre manualmente después del clic, y en Reemprender esto ya cuesta el 25% de los leads contactados (deuda insuficiente, informe de julio 2026).</p></div>
+      </div>
+      <div class="stage opportunity">
+        <div class="stage-tag"><span class="glyph">O</span><span class="name">Opportunity</span></div>
+        <div class="stage-body"><p>Un formulario público de precalificación (monto de deuda, tipo de acreedor, mora) antes de agendar, presentado como parte del servicio — "así confirmamos que podemos ayudarte antes de tu llamada" — convierte el filtro en beneficio percibido, no en barrera. Ningún competidor lo resuelve mejor hoy.</p></div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-num">04 / NIVEL DE CONCIENCIA</span>
+      <div class="stage pattern">
+        <div class="stage-tag"><span class="glyph">P</span><span class="name">Pattern</span></div>
+        <div class="stage-body"><p>Los tres comunican casi exclusivamente en <b>Consciente del producto / Muy consciente</b> — le hablan a quien ya sabe que existe la ley de insolvencia y ya está buscando ayuda.</p></div>
+      </div>
+      <div class="stage gap">
+        <div class="stage-tag"><span class="glyph">G</span><span class="name">Gap</span></div>
+        <div class="stage-body"><p>Nadie educa en los niveles previos: qué pasa si no actúas, qué es un reporte a centrales de riesgo, quién califica legalmente. Ese contenido no existe verificable en ninguno de los tres sitios ni blogs.</p></div>
+      </div>
+      <div class="stage opportunity">
+        <div class="stage-tag"><span class="glyph">O</span><span class="name">Opportunity</span></div>
+        <div class="stage-body"><p>Construir volumen de demanda futura ocupando el contenido top-of-funnel donde hoy no hay competencia, en vez de pelear solo por el tráfico de quien ya escribe "ley de insolvencia" en Google — ese tráfico ya se reparte entre tres marcas con presupuesto.</p></div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-num">05 / PROMESA LEGAL</span>
+      <div class="stage pattern">
+        <div class="stage-tag"><span class="glyph">P</span><span class="name">Pattern</span></div>
+        <div class="stage-body"><p>Los tres comunican la promesa con lenguaje de <b>"segunda oportunidad" o "garantizado"</b> sin distinguir qué otorga la ley automáticamente y qué depende del caso particular.</p></div>
+      </div>
+      <div class="stage gap">
+        <div class="stage-tag"><span class="glyph">G</span><span class="name">Gap</span></div>
+        <div class="stage-body"><p>Esa ambigüedad es un riesgo compartido de expectativa mal calibrada en toda la categoría — probablemente se traduce en objeciones tardías durante la llamada de ventas, no en el sitio, donde nadie la mide.</p></div>
+      </div>
+      <div class="stage opportunity">
+        <div class="stage-tag"><span class="glyph">O</span><span class="name">Opportunity</span></div>
+        <div class="stage-body"><p>Reemprender ya tiene resuelto el disclaimer exacto (los 3 requisitos de ley: no comerciante o activos limitados, dos o más acreedores, mora +90 días). Publicarlo con esa precisión no es solo cumplimiento — es la única marca de la categoría que puede decir con exactitud qué garantiza la ley, un diferenciador de confianza verificable frente a la ambigüedad de los tres competidores.</p></div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-num">06 / CANAL SOCIAL</span>
+      <div class="stage pattern">
+        <div class="stage-tag"><span class="glyph">P</span><span class="name">Pattern</span></div>
+        <div class="stage-body"><p>Ninguna de las tres marcas muestra <b>actividad social verificable y consistente</b> — perfiles bloqueados a auditoría externa, o sin evidencia de cadencia sostenida.</p></div>
+      </div>
+      <div class="stage gap">
+        <div class="stage-tag"><span class="glyph">G</span><span class="name">Gap</span></div>
+        <div class="stage-body"><p>El canal de mayor alcance orgánico y menor costo para educar en niveles tempranos de conciencia está desatendido en toda la categoría — nadie lo está usando de forma comprobable para construir marca, solo para sostener presencia mínima.</p></div>
+      </div>
+      <div class="stage opportunity">
+        <div class="stage-tag"><span class="glyph">O</span><span class="name">Opportunity</span></div>
+        <div class="stage-body"><p>Construir presencia social sostenida y auditable (contenido corto explicando conceptos legales, casos, qué hacer ante el acoso de cobradores) es terreno abierto — el primero en hacerlo bien gana categoría de búsqueda y de marca sin pelear de frente por CPC en Meta/Google Ads.</p></div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-num">07 / NOMBRE DE MARCA</span>
+      <div class="stage pattern">
+        <div class="stage-tag"><span class="glyph">P</span><span class="name">Pattern</span></div>
+        <div class="stage-body"><p>Dos de los tres nombres de marca (<b>ChaoDeudas, Vive Sin Deudas</b>) colisionan con marcas homónimas de otros países (Chile, España) que venden algo distinto — una fintech de descuentos, un despacho español.</p></div>
+      </div>
+      <div class="stage gap">
+        <div class="stage-tag"><span class="glyph">G</span><span class="name">Gap</span></div>
+        <div class="stage-body"><p>Ninguna de las dos refuerza activamente su identidad local frente a esa homonimia — un prospecto colombiano puede aterrizar en el sitio equivocado con una oferta y expectativa distintas, y nadie en la categoría lo está blindando en SEO ni en redes.</p></div>
+      </div>
+      <div class="stage opportunity">
+        <div class="stage-tag"><span class="glyph">O</span><span class="name">Opportunity</span></div>
+        <div class="stage-body"><p>La migración de "Fundación Reemprender" a "Grupo Reemprender" es la oportunidad de fijar un nombre sin colisión ya existente en el nicho de insolvencia en Colombia. Proteger eso en SEO, redes y marca registrada ahora es más barato que corregirlo después de escalar pauta.</p></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="verdict">
+    <span class="label">De observación a estrategia</span>
+    <p>El hilo común de los siete: cada patrón saturado esconde un gap que ningún competidor está resolviendo porque requiere algo que no tienen — una historia de fundador real, un equipo legal visible, un umbral de calificación ya definido, o un nombre sin colisión de marca. Reemprender no necesita superar a la competencia en volumen de contenido o presupuesto de pauta; necesita ocupar los cruces que sus propios activos (ya existentes, no por construir) dejan libres.</p>
+  </div>
+
+  <footer>
+    Fuentes: auditorías de vivesindeudas.com, insolvenciacolombia.com y chaodeudas.co realizadas en esta sesión (sitio web, prensa y redes donde fue verificable) · Grupo Reemprender, contexto interno del proyecto.
+  </footer>
+</div>
