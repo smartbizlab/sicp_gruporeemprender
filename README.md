@@ -1,1 +1,1 @@
-# sicp
+# sicp_gruporeemprender
